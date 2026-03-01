@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4vmql5tepne4"]
+
+[ext_resource type="PackedScene" uid="uid://cin503oxnyl3r" path="res://shared/assets/frying-pan.fbx" id="1_q07nu"]
+
+[node name="PaddlePan" type="Node3D"]
+
+[node name="frying-pan" parent="." instance=ExtResource("1_q07nu")]
