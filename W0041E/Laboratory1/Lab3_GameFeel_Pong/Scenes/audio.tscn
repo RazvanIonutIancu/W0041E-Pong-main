@@ -26,3 +26,4 @@ stream = ExtResource("3_r20bm")
 stream = ExtResource("5_5k02u")
 volume_db = -40.0
 autoplay = true
+parameters/looping = true

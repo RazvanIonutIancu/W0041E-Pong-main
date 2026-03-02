@@ -42,7 +42,8 @@ public partial class PongLogic : Node
     [Export]
     public Node3D audioNode;
 
-
+    [Export]
+    public Camera3D camera;
 
 
 
@@ -117,11 +118,35 @@ public partial class PongLogic : Node
     private bool bleftPlayed = false;
 
 
+    private float cameraRotation;
+    private Vector3 cameraBaseRotation;
+    private float cameraRotationRange = Mathf.DegToRad(20);
+
+    private Vector3 cameraBasePosition;
+    private float cameraZoom;
+
+
+
+
+
+
+
+
+    //****************************
+    //
+    //
+    // METHODS
+    //
+    //
+    //****************************
+
 
     public override void _Ready()
     {
         leftPan.Position = leftPaddle.Position;
         rightPan.Position = rightPaddle.Position;
+        cameraBaseRotation = camera.Rotation;
+        cameraBasePosition = camera.Position;
 
 
         sizzling = audioNode.GetNode<AudioStreamPlayer>("Sizzling");
@@ -216,14 +241,14 @@ public partial class PongLogic : Node
             ballVelocity.Z *= -1;
         }
 
-        MeatWave();
+        MeatWave(delta);
     }
 
 
 
 
     // Calculating meat Y position
-    private void MeatWave()
+    private void MeatWave(double delta)
     {
         float distanceFromLeftPaddle = ball.GlobalPosition.X - leftPaddle.GlobalPosition.X;
         float distanceBetweenPaddles = rightPaddle.GlobalPosition.X - leftPaddle.GlobalPosition.X;
@@ -258,8 +283,54 @@ public partial class PongLogic : Node
 
         }
 
+        CameraMovement(t, delta);
 
     }
+
+
+    // Camera movement
+    private void CameraMovement(float multiplier, double delta)
+    {
+
+        if (currentStage == Stage.PONG)
+        {
+            camera.Rotation = cameraBaseRotation;
+            camera.Position = cameraBasePosition;
+        }
+        else if (currentStage == Stage.KITCHEN && meatIsMoving)
+        {
+            // Follow
+            float rotationOffset = (multiplier * cameraRotationRange) - (cameraRotationRange / 2);
+
+            cameraRotation = Mathf.Lerp(camera.Rotation.Z, rotationOffset, 5.0f * (float)delta);
+
+            camera.Rotation = new Vector3(cameraBaseRotation.X, -cameraRotation, cameraRotation);
+
+
+
+            // Zooming
+            float cameraTargetZoom = (float)Mathf.Cos(rotationOffset * 4) + 1f;
+
+            cameraZoom = Mathf.Lerp(camera.Position.Y, cameraTargetZoom,  4.0f * (float)delta);
+
+            camera.Position = new Vector3(camera.Position.X, cameraZoom, camera.Position.Z) ;
+
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Animating paddles
     private void AnimatePaddle(double delta)
