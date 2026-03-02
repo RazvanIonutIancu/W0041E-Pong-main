@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://wksbcrmufd2b"]
+
+[ext_resource type="AudioStream" uid="uid://0yqa02rpij6s" path="res://shared/audio/bleft.wav" id="1_egfk8"]
+[ext_resource type="AudioStream" uid="uid://b8b3mbht6g2n1" path="res://shared/audio/sizzling.wav" id="1_mywpb"]
+[ext_resource type="AudioStream" uid="uid://dbnfv6yp8vwpw" path="res://shared/audio/bong.wav" id="2_qpl52"]
+[ext_resource type="AudioStream" uid="uid://bgrub5xfcnoha" path="res://shared/audio/fwoosh.wav" id="3_r20bm"]
+[ext_resource type="AudioStream" uid="uid://cio7adb48ooyt" path="res://shared/audio/Cyberpunk Moonlight Sonata v2.mp3" id="5_5k02u"]
+
+[node name="Audio" type="Node3D"]
+
+[node name="Bleft" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_egfk8")
+
+[node name="Sizzling" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_mywpb")
+volume_db = -20.0
+
+[node name="Bong" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_qpl52")
+volume_db = -5.0
+
+[node name="Fwoosh" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_r20bm")
+
+[node name="CyberpunkMoonlightSonataV2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_5k02u")
+volume_db = -40.0
+autoplay = true

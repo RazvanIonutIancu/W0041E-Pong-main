@@ -39,6 +39,17 @@ public partial class PongLogic : Node
 
 
 
+    [Export]
+    public Node3D audioNode;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -80,12 +91,12 @@ public partial class PongLogic : Node
     private float panMaxXYOffset = 2f;
     private float panMaxRotation = Mathf.DegToRad(90);
     private float panRotationSpeed = 7.0f;
+    private float meatRotationAngle = 1440f;
 
     Vector3 leftPanBasePosition = new Vector3(0f, 0f, 0f);
     Vector3 rightPanBasePosition = new Vector3(0f, 0f, 0f);
 
     float panDefaultRotationY = Mathf.DegToRad(-180);
-
 
     public enum Stage
     {
@@ -95,11 +106,15 @@ public partial class PongLogic : Node
 
     Stage currentStage = Stage.KITCHEN;
 
-
+    private float meatMinHeight = 0.1f;
     private float meatMaxHeight = 0.5f;
     private bool meatIsMoving = true;
 
-
+    private AudioStreamPlayer sizzling;
+    private AudioStreamPlayer bong;
+    private AudioStreamPlayer fwoosh;
+    private AudioStreamPlayer bleft;
+    private bool bleftPlayed = false;
 
 
 
@@ -107,7 +122,15 @@ public partial class PongLogic : Node
     {
         leftPan.Position = leftPaddle.Position;
         rightPan.Position = rightPaddle.Position;
+
+
+        sizzling = audioNode.GetNode<AudioStreamPlayer>("Sizzling");
+        bong = audioNode.GetNode<AudioStreamPlayer>("Bong");
+        fwoosh = audioNode.GetNode<AudioStreamPlayer>("Fwoosh");
+        bleft = audioNode.GetNode<AudioStreamPlayer>("Bleft");
+
         InitMatch();
+
     }
 
     public override void _Process(double delta)
@@ -154,6 +177,10 @@ public partial class PongLogic : Node
             centerLine.Visible = true;
             leftPaddle.Visible = true;
             rightPaddle.Visible = true;
+
+
+            // Mute sounds
+            AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), -80.0f);
         }
 
         if (currentStage == Stage.KITCHEN)
@@ -167,6 +194,10 @@ public partial class PongLogic : Node
             centerLine.Visible = false;
             leftPaddle.Visible = false;
             rightPaddle.Visible = false;
+
+
+            // Unmute sounds
+            AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), 0.0f);
         }
     }
 
@@ -203,15 +234,28 @@ public partial class PongLogic : Node
         {
             float meatAirPosition = meatMaxHeight * Mathf.Sin(t * Mathf.Pi);
 
-            meat.GlobalPosition = new Vector3(ball.GlobalPosition.X, meatAirPosition, ball.GlobalPosition.Z);
+            meat.GlobalPosition = new Vector3(ball.GlobalPosition.X, meatAirPosition + meatMinHeight, ball.GlobalPosition.Z);
             meatIsMoving = true;
 
-            float meatAngle = t * Mathf.DegToRad(720);
+            float meatAngle = t * Mathf.DegToRad(meatRotationAngle);
             meat.Rotation = new Vector3(0f, 0f, -meatAngle);
+
+            if (!fwoosh.Playing)
+            {
+                fwoosh.Play();
+            }
         }
         else
         {
+            if (!bleftPlayed)
+            {
+                bleft.Play();
+                bleftPlayed = true;
+            }
+
             meatIsMoving = false;
+            fwoosh.Stop();
+
         }
 
 
@@ -347,6 +391,9 @@ public partial class PongLogic : Node
         float velocityX = horizontalDirection * Mathf.Cos(angle);
         float velocityZ = Mathf.Sin(angle);
         ballVelocity = new Vector3(velocityX, 0, velocityZ) * ballSpeed;
+
+
+        bleftPlayed = false;
     }
 
     // Restart match
@@ -394,7 +441,6 @@ private void CheckPaddleCollision()
             ballVelocity.X *= -1;
 
             // Animate the paddle
-
             if (targetPaddle == leftPaddle)
             {
                 leftPanTimer.Start();
@@ -403,6 +449,18 @@ private void CheckPaddleCollision()
             {
                 rightPanTimer.Start();
             }
+
+            // Sound
+            bong.Play();
+            sizzling.Play();
+
+
+
+
+
+
+
+
 
             float distanceFromCenter = ball.GlobalPosition.Z - paddleCenterZ;
             float maxAngle = 75.0f;  

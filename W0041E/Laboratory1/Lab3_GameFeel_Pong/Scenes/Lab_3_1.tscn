@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bxsjqwurlq4a8"]
+[gd_scene load_steps=11 format=3 uid="uid://bxsjqwurlq4a8"]
 
 [ext_resource type="Material" uid="uid://c3b0ilgfnsvyi" path="res://shared/materials/Mat_Black.tres" id="1_y0gck"]
 [ext_resource type="Script" uid="uid://vspf4tlaj8t6" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scripts/PongLogic.cs" id="2_0f0sq"]
 [ext_resource type="PackedScene" uid="uid://be2qqxe06dvwp" path="res://shared/assets/kitchenStoveElectric.fbx" id="2_85um5"]
 [ext_resource type="PackedScene" uid="uid://cin503oxnyl3r" path="res://shared/assets/frying-pan.fbx" id="3_yvltx"]
 [ext_resource type="PackedScene" uid="uid://cqha5vls5i6ju" path="res://shared/assets/meat-patty.fbx" id="4_2c6hd"]
+[ext_resource type="PackedScene" uid="uid://wksbcrmufd2b" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scenes/audio.tscn" id="6_rsk78"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_5lwcm"]
 
@@ -112,7 +113,7 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.93
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.25037995, 0.96814764, 0, -0.96814764, 0.25037995, 0, 2.271, 1.085)
 
-[node name="PaddleController" type="Node3D" parent="." node_paths=PackedStringArray("kitchenAssets", "meat", "rightPan", "leftPan", "leftPaddle", "rightPaddle", "leftPanTimer", "rightPanTimer", "centerLine", "ball")]
+[node name="PaddleController" type="Node3D" parent="." node_paths=PackedStringArray("kitchenAssets", "meat", "rightPan", "leftPan", "leftPaddle", "rightPaddle", "leftPanTimer", "rightPanTimer", "audioNode", "centerLine", "ball")]
 script = ExtResource("2_0f0sq")
 kitchenAssets = NodePath("../Level/KitchenAssets")
 meat = NodePath("../Level/KitchenAssets/meat-patty")
@@ -122,6 +123,7 @@ leftPaddle = NodePath("LeftPaddle")
 rightPaddle = NodePath("RightPaddle")
 leftPanTimer = NodePath("../LeftPanTimer")
 rightPanTimer = NodePath("../RightPanTimer")
+audioNode = NodePath("../Audio")
 centerLine = NodePath("../Level/Centerline")
 ball = NodePath("../Ball")
 tableSize = Vector2(3, 2)
@@ -153,3 +155,10 @@ one_shot = true
 [node name="RightPanTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="Audio" parent="." instance=ExtResource("6_rsk78")]
+
+[node name="Sizzling" parent="Audio" index="0"]
+volume_db = -10.0
+
+[editable path="Audio"]
