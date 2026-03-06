@@ -1,0 +1,12 @@
+# Pong Notes
+
+
+## Based on the representation and polish, is something that is expected from the metaphors or treatment that feels missing? 
+
+- Flipping a burger patty comes with the expectation that it must be done at some point but in this metaphor, frying it indefinitly (even though it barely touches the pans) is the desired outcome.
+
+
+
+### Based on the representation and polish, How would you like the mechanics to change?
+
+- Adding a loss state when the ball touches the horizontal edges would make sense in this scenario, rather than having the patty bounce off imaginary walls.
