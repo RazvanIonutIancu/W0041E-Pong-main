@@ -37,6 +37,9 @@ public partial class PongLogic : Node
     [Export]
     public Timer rightPanTimer;
 
+    [Export]
+    public Timer cameraShakeTimer;
+
 
 
     [Export]
@@ -124,7 +127,9 @@ public partial class PongLogic : Node
 
     private Vector3 cameraBasePosition;
     private float cameraZoom;
-
+    private float cameraShakeAmplitude;
+    private float cameraShakeFrequency = 50f;
+    private float cameraShakeDecay = 0.95f;
 
 
 
@@ -313,15 +318,29 @@ public partial class PongLogic : Node
 
             cameraZoom = Mathf.Lerp(camera.Position.Y, cameraTargetZoom,  4.0f * (float)delta);
 
-            camera.Position = new Vector3(camera.Position.X, cameraZoom, camera.Position.Z) ;
 
+            if(cameraShakeTimer.IsStopped())
+            {
+                camera.Position = new Vector3(cameraBasePosition.X, cameraZoom, cameraBasePosition.Z);
+            }
+            else
+            {
+                float shakeOffset = cameraShakeAmplitude * Mathf.Sin(Mathf.Pi * multiplier * cameraShakeFrequency);
 
+                camera.Position = new Vector3(cameraBasePosition.X + shakeOffset, cameraZoom, cameraBasePosition.Z);
+
+                cameraShakeAmplitude *= cameraShakeDecay;
+            }
         }
 
     }
 
 
-
+    private void StartCameraShakeTimer()
+    {
+        cameraShakeAmplitude = 0.1f;
+        cameraShakeTimer.Start();
+    }
 
 
 
@@ -525,6 +544,8 @@ private void CheckPaddleCollision()
             bong.Play();
             sizzling.Play();
 
+            // Camera Shake
+            StartCameraShakeTimer();
 
 
 
@@ -533,7 +554,8 @@ private void CheckPaddleCollision()
 
 
 
-            float distanceFromCenter = ball.GlobalPosition.Z - paddleCenterZ;
+
+                float distanceFromCenter = ball.GlobalPosition.Z - paddleCenterZ;
             float maxAngle = 75.0f;  
             float angle = Mathf.DegToRad(maxAngle * (distanceFromCenter / paddleHalfSizeZ));
 
