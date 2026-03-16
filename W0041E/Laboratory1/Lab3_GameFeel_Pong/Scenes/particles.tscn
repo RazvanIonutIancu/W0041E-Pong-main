@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://doqwdhjxte4bu"]
+
+[ext_resource type="Script" uid="uid://cv2h8xqddvir0" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scripts/SpeedParticles.cs" id="1_2oigg"]
+[ext_resource type="Script" uid="uid://cf5smndxilvgt" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scripts/SmokeParticles.cs" id="2_sqhdi"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_58k60"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 0.1
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+angle_min = 1.0728835e-05
+angle_max = 1.0728835e-05
+gravity = Vector3(10, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.099999994
+color = Color(1, 0.41960785, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2oigg"]
+albedo_color = Color(0.7372549, 0.36078432, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_2oigg"]
+material = SubResource("StandardMaterial3D_2oigg")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2oigg"]
+emission_shape = 4
+emission_point_count = 1
+spread = 180.0
+initial_velocity_min = 0.29999998
+initial_velocity_max = 0.5
+gravity = Vector3(0, 0, 0)
+damping_min = 0.5
+damping_max = 0.5
+scale_min = 0.049999997
+scale_max = 0.049999997
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqhdi"]
+albedo_color = Color(0.38170326, 0.38170323, 0.38170323, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yhsvx"]
+material = SubResource("StandardMaterial3D_sqhdi")
+
+[node name="Particles" type="Node3D"]
+
+[node name="SpeedParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0511681, 0.99869007, 0, -0.99869007, 0.0511681, 0, 0, 0)
+emitting = false
+amount = 20
+lifetime = 0.2
+process_material = SubResource("ParticleProcessMaterial_58k60")
+draw_pass_1 = SubResource("SphereMesh_2oigg")
+script = ExtResource("1_2oigg")
+
+[node name="SmokeParticles" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 200
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_2oigg")
+draw_pass_1 = SubResource("SphereMesh_yhsvx")
+script = ExtResource("2_sqhdi")

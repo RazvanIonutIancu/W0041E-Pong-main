@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bxsjqwurlq4a8"]
+[gd_scene load_steps=12 format=3 uid="uid://bxsjqwurlq4a8"]
 
 [ext_resource type="Material" uid="uid://c3b0ilgfnsvyi" path="res://shared/materials/Mat_Black.tres" id="1_y0gck"]
 [ext_resource type="Script" uid="uid://vspf4tlaj8t6" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scripts/PongLogic.cs" id="2_0f0sq"]
 [ext_resource type="PackedScene" uid="uid://be2qqxe06dvwp" path="res://shared/assets/kitchenStoveElectric.fbx" id="2_85um5"]
 [ext_resource type="PackedScene" uid="uid://cin503oxnyl3r" path="res://shared/assets/frying-pan.fbx" id="3_yvltx"]
 [ext_resource type="PackedScene" uid="uid://cqha5vls5i6ju" path="res://shared/assets/meat-patty.fbx" id="4_2c6hd"]
+[ext_resource type="PackedScene" uid="uid://doqwdhjxte4bu" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scenes/particles.tscn" id="6_8pk5x"]
 [ext_resource type="PackedScene" uid="uid://wksbcrmufd2b" path="res://W0041E/Laboratory1/Lab3_GameFeel_Pong/Scenes/audio.tscn" id="6_rsk78"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_5lwcm"]
@@ -145,6 +146,8 @@ transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.5, 1.5, 0, 0)
 [node name="LeftPaddleMesh" type="MeshInstance3D" parent="PaddleController/RightPaddle"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
 mesh = SubResource("BoxMesh_xpm5r")
+
+[node name="Particles" parent="PaddleController" instance=ExtResource("6_8pk5x")]
 
 [node name="Ball" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.100372, 0, 0, 0, 0.100372, 0, 0, 0, 0.100372, 0, 0, 0)

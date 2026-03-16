@@ -108,7 +108,7 @@ public partial class PongLogic : Node
         KITCHEN
     }
 
-    Stage currentStage = Stage.KITCHEN;
+    public Stage currentStage = Stage.KITCHEN;
 
     private float meatMinHeight = 0.1f;
     private float meatMaxHeight = 0.5f;
@@ -133,7 +133,8 @@ public partial class PongLogic : Node
 
 
 
-
+    private SpeedParticles speedParticles;
+    private SmokeParticles smokeParticles;
 
 
 
@@ -158,6 +159,9 @@ public partial class PongLogic : Node
         bong = audioNode.GetNode<AudioStreamPlayer>("Bong");
         fwoosh = audioNode.GetNode<AudioStreamPlayer>("Fwoosh");
         bleft = audioNode.GetNode<AudioStreamPlayer>("Bleft");
+
+        speedParticles = GetNode<SpeedParticles>("Particles/SpeedParticles");
+        smokeParticles = GetNode<SmokeParticles>("Particles/SmokeParticles");
 
         InitMatch();
 
@@ -207,6 +211,7 @@ public partial class PongLogic : Node
             centerLine.Visible = true;
             leftPaddle.Visible = true;
             rightPaddle.Visible = true;
+            smokeParticles.Hide();
 
 
             // Mute sounds
@@ -224,6 +229,7 @@ public partial class PongLogic : Node
             centerLine.Visible = false;
             leftPaddle.Visible = false;
             rightPaddle.Visible = false;
+            smokeParticles.Show();
 
 
             // Unmute sounds
@@ -285,6 +291,8 @@ public partial class PongLogic : Node
 
             meatIsMoving = false;
             fwoosh.Stop();
+            speedParticles.StopTrail();
+
 
         }
 
@@ -356,6 +364,7 @@ public partial class PongLogic : Node
     {
         if (!leftPanTimer.IsStopped())
         {
+
             float xOffset = Mathf.Lerp(leftPan.Position.X, leftPanBasePosition.X, 1.0f * (float)delta);
             float yOffset = Mathf.Lerp(leftPan.Position.Y, leftPanBasePosition.Y + panMaxXYOffset, 1.0f * (float)delta);
 
@@ -470,6 +479,12 @@ public partial class PongLogic : Node
     }
 
 
+    public Vector3 GetBallVelocity()
+    {
+        return ballVelocity;
+    }
+
+
 
 
     // Initialize match and set ball starting velocity
@@ -534,10 +549,14 @@ private void CheckPaddleCollision()
             if (targetPaddle == leftPaddle)
             {
                 leftPanTimer.Start();
+                Vector3 smokePosition = new Vector3(meat.GlobalPosition.X + 0.3f, meat.GlobalPosition.Y + 0.3f, meat.GlobalPosition.Z);
+                smokeParticles.EmitSmoke(smokePosition);
             }
             else
             {
                 rightPanTimer.Start();
+                Vector3 smokePosition = new Vector3(meat.GlobalPosition.X - 0.3f, meat.GlobalPosition.Y + 0.3f, meat.GlobalPosition.Z);
+                smokeParticles.EmitSmoke(smokePosition);
             }
 
             // Sound
@@ -546,6 +565,7 @@ private void CheckPaddleCollision()
 
             // Camera Shake
             StartCameraShakeTimer();
+            speedParticles.StopTrail();
 
 
 
@@ -554,8 +574,7 @@ private void CheckPaddleCollision()
 
 
 
-
-                float distanceFromCenter = ball.GlobalPosition.Z - paddleCenterZ;
+            float distanceFromCenter = ball.GlobalPosition.Z - paddleCenterZ;
             float maxAngle = 75.0f;  
             float angle = Mathf.DegToRad(maxAngle * (distanceFromCenter / paddleHalfSizeZ));
 
@@ -565,10 +584,12 @@ private void CheckPaddleCollision()
 			if(leftPaddleVerticalVelocity > 0.07f && targetPaddle == leftPaddle)
             {
 				ballVelocity = ballVelocity * 2.0f;
+                speedParticles.EmitTrail();
 			}
             if(rightPaddleVerticalVelocity > 0.07f && targetPaddle == rightPaddle)
             {
                 ballVelocity = ballVelocity * 2.0f;
+                speedParticles.EmitTrail();
             }
 
             if (ball.GlobalPosition.X < targetPaddle.GlobalPosition.X)
