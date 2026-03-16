@@ -13,6 +13,10 @@ public partial class PongLogic : Node
     public Node3D meat;
 
     [Export]
+    public Node3D pattyHolder;
+
+
+    [Export]
     public Node3D rightPan;
 
     [Export]
@@ -118,6 +122,7 @@ public partial class PongLogic : Node
     private AudioStreamPlayer bong;
     private AudioStreamPlayer fwoosh;
     private AudioStreamPlayer bleft;
+    private AudioStreamPlayer ding;
     private bool bleftPlayed = false;
 
 
@@ -135,6 +140,12 @@ public partial class PongLogic : Node
 
     private SpeedParticles speedParticles;
     private SmokeParticles smokeParticles;
+
+
+
+
+
+
 
 
 
@@ -159,9 +170,11 @@ public partial class PongLogic : Node
         bong = audioNode.GetNode<AudioStreamPlayer>("Bong");
         fwoosh = audioNode.GetNode<AudioStreamPlayer>("Fwoosh");
         bleft = audioNode.GetNode<AudioStreamPlayer>("Bleft");
+        ding = audioNode.GetNode<AudioStreamPlayer>("Ding");
 
         speedParticles = GetNode<SpeedParticles>("Particles/SpeedParticles");
         smokeParticles = GetNode<SmokeParticles>("Particles/SmokeParticles");
+
 
         InitMatch();
 
@@ -280,6 +293,11 @@ public partial class PongLogic : Node
             {
                 fwoosh.Play();
             }
+
+
+
+            float newScale = 1 + meatAirPosition * 5f;
+            pattyHolder.Scale = new Vector3(newScale, newScale, newScale);
         }
         else
         {
@@ -497,7 +515,7 @@ public partial class PongLogic : Node
         float velocityZ = Mathf.Sin(angle);
         ballVelocity = new Vector3(velocityX, 0, velocityZ) * ballSpeed;
 
-
+        ding.Play();
         bleftPlayed = false;
     }
 

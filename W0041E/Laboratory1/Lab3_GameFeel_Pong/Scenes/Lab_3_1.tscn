@@ -109,15 +109,18 @@ transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, -1.0
 [node name="right-frying-pan" parent="Level/KitchenAssets" instance=ExtResource("3_yvltx")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0.9306991, 0, 0)
 
-[node name="meat-patty" parent="Level/KitchenAssets" instance=ExtResource("4_2c6hd")]
+[node name="pattyHolder" type="Node3D" parent="Level/KitchenAssets"]
+
+[node name="meat-patty" parent="Level/KitchenAssets/pattyHolder" instance=ExtResource("4_2c6hd")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.17364822, 0.9848077, 0, -0.9848077, 0.17364822, 0, 2.271, 0.5)
 
-[node name="PaddleController" type="Node3D" parent="." node_paths=PackedStringArray("kitchenAssets", "meat", "rightPan", "leftPan", "leftPaddle", "rightPaddle", "leftPanTimer", "rightPanTimer", "cameraShakeTimer", "audioNode", "camera", "centerLine", "ball")]
+[node name="PaddleController" type="Node3D" parent="." node_paths=PackedStringArray("kitchenAssets", "meat", "pattyHolder", "rightPan", "leftPan", "leftPaddle", "rightPaddle", "leftPanTimer", "rightPanTimer", "cameraShakeTimer", "audioNode", "camera", "centerLine", "ball")]
 script = ExtResource("2_0f0sq")
 kitchenAssets = NodePath("../Level/KitchenAssets")
-meat = NodePath("../Level/KitchenAssets/meat-patty")
+meat = NodePath("../Level/KitchenAssets/pattyHolder/meat-patty")
+pattyHolder = NodePath("../Level/KitchenAssets/pattyHolder")
 rightPan = NodePath("../Level/KitchenAssets/right-frying-pan")
 leftPan = NodePath("../Level/KitchenAssets/left-frying-pan")
 leftPaddle = NodePath("LeftPaddle")
